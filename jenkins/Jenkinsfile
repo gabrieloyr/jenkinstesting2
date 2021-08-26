@@ -1,0 +1,13 @@
+node {
+    stage('Build') {
+            echo 'Build Stage - Using scripted pipeline..'
+    }
+    
+    stage('Test') {
+        echo 'Test Stage- Using scripted pipeline..'
+    }
+    
+    stage('Deploy') {
+        echo 'Deploy Stage - Using scripted pipeline..'
+    }
+}
