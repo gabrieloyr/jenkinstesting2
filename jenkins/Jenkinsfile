@@ -1,3 +1,29 @@
+pipeline {
+    agent any
+    options {
+        skipStagesAfterUnstable()
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'make'
+            }
+        }
+        stage('Test'){
+            steps {
+                sh 'make check'
+                junit 'reports/**/*.xml'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'make publish'
+            }
+        }
+    }
+}
+
+/*
 node {
     stage('Build') {
             echo 'Build Stage - Using scripted pipeline..'
@@ -11,3 +37,4 @@ node {
         echo 'Deploy Stage - Using scripted pipeline..'
     }
 }
+*/
