@@ -1,40 +1,44 @@
 pipeline {
-    agent any
-    options {
-        skipStagesAfterUnstable()
-    }
+    agent none
     stages {
         stage('Build') {
+            agent any
             steps {
-                sh 'make'
+                checkout scm
+                echo 'make: command not found'
+//                 sh 'make'
+//                 stash includes: '**/target/*.jar', name: 'app' 
             }
         }
-        stage('Test'){
+        stage('Test on Linux') {
+            agent { 
+                label 'linux'
+            }
             steps {
-                sh 'make check'
-                junit 'reports/**/*.xml'
+                echo 'Testing Stage on Linux'
+//                 unstash 'app' 
+//                 sh 'make check'
+            }
+            post {
+                always {
+                    junit '**/target/*.xml'
+                }
             }
         }
-        stage('Deploy') {
+        stage('Test on Windows') {
+            agent {
+                label 'windows'
+            }
             steps {
-                sh 'make publish'
+                echo 'Testing Stage on Windows'
+//                 unstash 'app'
+//                 bat 'make check' 
+            }
+            post {
+                always {
+                    junit '**/target/*.xml'
+                }
             }
         }
     }
 }
-
-/*
-node {
-    stage('Build') {
-            echo 'Build Stage - Using scripted pipeline..'
-    }
-    
-    stage('Test') {
-        echo 'Test Stage- Using scripted pipeline..'
-    }
-    
-    stage('Deploy') {
-        echo 'Deploy Stage - Using scripted pipeline..'
-    }
-}
-*/
